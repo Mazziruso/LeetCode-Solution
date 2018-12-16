@@ -34,20 +34,26 @@ public:
 			return str;
 		}
 		q.push(qbase(root, -1));
+		str += to_string(root->val);
+		str += " -1 -1 ";
 		int len = 0;
 		while (!q.empty()) {
 			qb = q.front();
 			q.pop();
 			node = qb.node;
-			str += to_string(node->val);
-			str += " ";
-			str += to_string(qb.index);
-			str += " ";
 
 			if (node->left != NULL) {
+				str += to_string(node->left->val);
+				str += " ";
+				str += to_string(len);
+				str += " 0 ";
 				q.push(qbase(node->left, len));
 			}
 			if (node->right != NULL) {
+				str += to_string(node->right->val);
+				str += " ";
+				str += to_string(len);
+				str += " 1 ";
 				q.push(qbase(node->right, len));
 			}
 			len++;
@@ -63,6 +69,7 @@ public:
 		int cnt = 0;
 		string str;
 		int val;
+		int kid;
 		int lindex = 0;
 		int index = 0;
 		while (lindex < len) {
@@ -78,17 +85,17 @@ public:
 			str = data.substr(lindex, index - lindex);
 			lindex = index + 1;
 			val = stoi(str);
+
+			index = data.find_first_of(" ", lindex);
+			str = data.substr(lindex, index - lindex);
+			lindex = index + 1;
+			kid = stoi(str);
 			if (val >= 0) {
-				if (child[val][0] < 0) {
-					child[val][0] = cnt;
-				}
-				else {
-					child[val][1] = cnt;
-				}
+				child[val][kid] = cnt;
 			}
 			cnt++;
 		}
-		
+
 		if (cnt == 0) {
 			return NULL;
 		}
@@ -119,10 +126,7 @@ public:
 int main() {
 
 	TreeNode *root = new TreeNode(1);
-	root->left = new TreeNode(2);
-	root->right = new TreeNode(3);
-	root->right->left = new TreeNode(4);
-	root->right->right = new TreeNode(5);
+	root->right = new TreeNode(2);
 
 	Codec s;
 
